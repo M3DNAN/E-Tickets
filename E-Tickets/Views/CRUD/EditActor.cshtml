@@ -1,0 +1,47 @@
+﻿@model Actor
+@{
+    ViewData["Title"] = "Edit Actor";
+    Layout = "~/Views/Shared/NavBar.cshtml";
+}
+<h2>Edit Actor</h2>
+
+<form asp-action="EditActor" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Bio"></label>
+        <textarea asp-for="Bio" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Current Profile Picture</label>
+        <img src="~/images/Actors/@Model.ProfilePictrue" alt="Actor Profile Picture" width="150" />
+    </div>
+
+    <div class="form-group">
+        <label>Update Profile Picture</label>
+        <input type="file" asp-for="ProfilePictrue" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Select Movies</label>
+        <select name="SelectedMovies" class="form-control" multiple="multiple">
+           @foreach (var movie in ViewBag.Movies)
+{
+    <option value="@movie.Value" >@movie.Text</option>
+}
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

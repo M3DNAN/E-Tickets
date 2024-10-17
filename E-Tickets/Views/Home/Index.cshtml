@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model List<Movie>
+<style>
+    .card-img-top {
+        height: 600px;
+        object-fit: cover; 
+    }
+
+    .card {
+        height: 100%; 
+    }
+
+    .card-body {
+        flex: 1; 
+    }
+</style>
+<div>
+    <h5 for="exampleSelect1" class="form-label mt-4">Select Genre</h5>
+    <form method="get" action="/Home/Index">
+        <select name="Id" class="form-select" id="exampleSelect1" onchange="this.form.submit()">
+            <option value="">All Genres</option> 
+            @foreach (var item in ViewBag.Genre)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </select>
+    </form>
+</div>
+<br />
+
+
+<div class="container">
+
+    <div class="row">
+        @foreach (var movie in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <h3 class="card-header">@movie.Name</h3>
+
+                    <img src="~/Images/Posters/@movie.ImgUrl" class="card-img-top img-fluid" alt="@movie.Name">
+                    <div class="card-body">
+                       
+                            <p class="card-text"><strong>Genre:</strong> @movie.Category.Name</p>
+                            <p class="card-text"><strong>Price:</strong> $@movie.Price</p>
+                        @if (movie.MovieStatus == MovieStatus.Available || movie.MovieStatus == MovieStatus.Upcoming)
+                                {
+                            <strong>Available in:</strong> <a href="/home/CinemaDetails?id=@movie.Cinema.Id" class="card-text"> @movie.Cinema.Name Cinema</a>
+                                }
+                        <br />
+                        <br />
+
+
+                        @{
+                            if (movie.MovieStatus == MovieStatus.Upcoming)
+                        {
+                                <span class="btn btn-danger"> Coming Soon </span>
+                            }
+                            else if (movie.MovieStatus == MovieStatus.Available)
+                            {
+                                <span class="btn btn-primary"> Available </span>
+                            }
+                            else
+                            {
+                                <span class="btn btn-dark"> Expired </span>
+
+                            }
+                        }
+                        <br />
+                        <br />
+                        <div >
+                            @{
+                                if (movie.MovieStatus == MovieStatus.Available || movie.MovieStatus == MovieStatus.Upcoming)
+                                {
+                                    <a href="" class="btn btn-success">Book Now</a>
+                                }
+
+                            }
+                            <a href="/home/MovieDetails?id=@movie.Id" class="btn btn-outline-primary">More Details </a>
+                      
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

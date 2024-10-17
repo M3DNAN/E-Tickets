@@ -1,0 +1,55 @@
+﻿@model Actor
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Actor Profile Picture and Basic Info -->
+        <div class="col-md-4">
+            <img src="~/Images/Actors/@Model.ProfilePictrue" class="img-fluid rounded" style="width: 400px; height: 500px; object-fit: cover;" alt="@Model.FirstName @Model.LastName" />
+        </div>
+
+        <!-- Actor Details -->
+        <div class="col-md-8">
+            <h2>@Model.FirstName @Model.LastName</h2>
+            <p><strong>Biography:</strong></p>
+            <p>@Model.Bio</p>
+
+            <p><strong>Latest News:</strong></p>
+            <p>@Model.News</p>
+        </div>
+    </div>
+
+    <hr />
+
+    <!-- Movies List -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Movies Featuring @Model.FirstName @Model.LastName</h3>
+        </div>
+
+        @if (Model.ActorMovies.Count > 0)
+        {
+            <div class="row">
+                @foreach (var movie in Model.ActorMovies)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="~/Images/Posters/@movie.Movie.ImgUrl" class="card-img-top img-fluid" alt="@movie.Movie.Name">
+                            <div class="card-body">
+                                <h5 class="card-title">@movie.Movie.Name</h5>
+                                <p class="card-text">
+                                    <strong>Genre:</strong> @movie.Movie.Category.Name <br />
+                                    <strong>Price:</strong> $@movie.Movie.Price
+                                </p>
+                                <a href="/home/MovieDetails?id=@movie.Movie.Id" class="btn btn-outline-primary">More Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p>This actor has no movies listed.</p>
+        }
+    </div>
+</div>

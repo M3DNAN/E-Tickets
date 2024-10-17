@@ -1,0 +1,113 @@
+﻿ Style for the navigation bar 
+.navbar {
+    display: flex;
+    justify-content: space-between;  Space between nav links and search bar 
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #282c34;
+    color: white;
+}
+.logo img {
+    width: 50px;  Adjust the size of the logo as needed 
+    height: auto;
+}
+ Styling for navigation links 
+.nav-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+    .nav-links li {
+        display: inline;
+        margin-right: 15px;
+    }
+
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+             Make the nav bar smaller with reduced font size 
+            .nav-links li a:hover {
+                text-decoration: underline;
+                color: #ff4757;
+            }
+
+ Style for the search bar aligned to the right 
+.search-bar {
+    display: inline-block;
+    margin-left: auto;  This pushes the search bar to the right 
+}
+
+    .search-bar input[type="text"] {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 180px;  Adjust the width of the search bar 
+    }
+
+    .search-bar button {
+        padding: 5px 10px;
+        background-color: #ff4757;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        .search-bar button:hover {
+            background-color: #ff6b81;
+        }
+
+ For the overall page styling 
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header h1 {
+    text-align: center;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.hero {
+    background-image: url('https://via.placeholder.com/1600x900?text=Cinema+Hero+Image');
+    background-size: cover;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+    .hero h2 {
+        font-size: 2.5em;
+    }
+
+    .hero p {
+        font-size: 1.2em;
+    }
+
+.btn {
+
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+section {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #282c34;
+    color: white;
+}
