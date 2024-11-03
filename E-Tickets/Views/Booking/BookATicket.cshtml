@@ -1,0 +1,51 @@
+﻿@model Booking
+
+@{
+    ViewData["Title"] = "Book a Ticket";
+}
+
+<h2>Book a Ticket for @ViewBag.MovieName</h2>
+
+<div class="movie-details">
+    <img src="~/Images/Posters/@ViewBag.MoviePoster" alt="Poster of @ViewBag.MovieName" class="movie-poster" />
+</div>
+
+<form asp-action="BookATicket" method="post">
+    <input type="hidden" asp-for="MovieId" value="@Model.MovieId" />
+
+    <div class="form-group">
+        <label asp-for="NumOfTickets">Number of Tickets</label>
+        <input asp-for="NumOfTickets" class="form-control" type="number" min="1" value="1" required />
+        <span asp-validation-for="NumOfTickets" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book Now</button>
+</form>
+
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["success"]
+    </div>
+}
+
+
+    <style>
+        .movie-details {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .movie-poster {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+    </style>
+
+
+@* @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} *@

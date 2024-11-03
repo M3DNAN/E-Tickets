@@ -1,0 +1,53 @@
+﻿@model E_Tickets.ViewModel.ApplicationUserVM
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/NavBar.cshtml";
+}
+
+<h1>Register</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="Register">
+            <div asp-validation-summary="None" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        
+            <div class="form-group">
+                <label asp-for="ConfirmPassword" class="control-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div><br />
+            <div class="form-group">
+                <input type="submit" value="submit" class="btn btn-primary" />
+            </div><br />
+            <div>
+                <p>
+                    <a asp-controller="Account" asp-action="LogInWithGoogle" class="btn btn-primary">Sign in with Google</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
