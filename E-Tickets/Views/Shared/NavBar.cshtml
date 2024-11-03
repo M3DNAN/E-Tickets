@@ -36,9 +36,9 @@
 
                 <ul class="nav-links">
                     <li><a href="/home/index">Movies</a></li>
-                    <li><a href="">Cinemas</a></li>
-                    <li><a href="/crud/Actors">Actors</a></li>
-                    <li><a href="#contact">About Us</a></li>
+                    <li><a href="/Cinema/index">Cinemas</a></li>
+                    <li><a href="/Actor/Actors">Actors</a></li>
+                    <li><a href="/Genre/index">Genres</a></li>
                 </ul>
             </div>
 
@@ -48,7 +48,6 @@
                     <i class='bx bx-sun sun'></i>
                 </div>
 
-
                 <form action="/Home/Search" method="get" class="search-bar">
                     <div class="searchBox">
                         <div class="searchToggle">
@@ -57,14 +56,36 @@
                         </div>
                         <div class="search-field">
                             <input name="query" type="text" placeholder="Search...">
-                            <i class='bx bx-search' style="color :aliceblue"></i>
+                            <i class='bx bx-search' style="color: aliceblue"></i>
                         </div>
-                </div>
-                </form>
-                    <div>
-                    <a action="/Home/MovieDetails"></a>
                     </div>
-              
+                </form>
+
+           
+                <ul class="nav-links ms-auto" style="color: white;">
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Profile">Welcome @User.Identity.Name</a>
+                        </li>
+                        <li><a href="/Booking/index">Check Out</a></li>
+
+                    }
+                </ul>
+
+             
             </div>
         </div>
     </nav>

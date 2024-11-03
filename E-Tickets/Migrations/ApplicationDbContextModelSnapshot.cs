@@ -340,6 +340,93 @@ namespace E_Tickets.Migrations
                         });
                 });
 
+            modelBuilder.Entity("E_Tickets.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("E_Tickets.Models.Booking", b =>
+                {
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("NumOfTickets")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SelectedSeats")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MovieId", "ApplicationUserId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Booking");
+                });
+
             modelBuilder.Entity("E_Tickets.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -508,9 +595,8 @@ namespace E_Tickets.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Price")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -538,7 +624,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "The Dark Knight.jpg",
                             MovieStatus = 2,
                             Name = "The Dark Knight",
-                            Price = "12.99",
+                            Price = 12.99,
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(1983),
                             TrailerUrl = "EXeTwQWrcwY"
                         },
@@ -552,7 +638,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Once Upon a Time... in Hollywood.jpg",
                             MovieStatus = 2,
                             Name = "Once Upon a Time... in Hollywood",
-                            Price = "12.99",
+                            Price = 12.99,
                             StartDate = new DateTime(2019, 7, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "ELeMaP8EPAA"
                         },
@@ -566,7 +652,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Venom The Last Dance.jpg",
                             MovieStatus = 0,
                             Name = "Venom: The Last Dance",
-                            Price = "12.99",
+                            Price = 12.99,
                             StartDate = new DateTime(2024, 5, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "HyIyd9joTTc"
                         },
@@ -580,7 +666,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Killers of the Flower Moon.jpg",
                             MovieStatus = 1,
                             Name = "Killers of the Flower Moon",
-                            Price = "14.99",
+                            Price = 14.99,
                             StartDate = new DateTime(2023, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "EP34Yoxs3FQ"
                         },
@@ -594,7 +680,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Interstellar.jpg",
                             MovieStatus = 2,
                             Name = "Interstellar",
-                            Price = "13.99",
+                            Price = 13.99,
                             StartDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified).AddTicks(1996),
                             TrailerUrl = "zSWdZVtXT7E"
                         },
@@ -608,7 +694,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Joker Folie à Deux.jpg",
                             MovieStatus = 0,
                             Name = "Joker: Folie à Deux",
-                            Price = "16.99",
+                            Price = 16.989999999999998,
                             StartDate = new DateTime(2024, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "_OKAwz2MsJs"
                         },
@@ -622,7 +708,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Deadpool & Wolverine.jpg",
                             MovieStatus = 0,
                             Name = "Deadpool & Wolverine",
-                            Price = "17.99",
+                            Price = 17.989999999999998,
                             StartDate = new DateTime(2024, 7, 26, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "73_1biulkYk"
                         },
@@ -636,7 +722,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "The Prestige.jpg",
                             MovieStatus = 2,
                             Name = "The Prestige",
-                            Price = "9.99",
+                            Price = 9.9900000000000002,
                             StartDate = new DateTime(2006, 10, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "ELq7V8vkekI"
                         },
@@ -650,7 +736,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Edge of Tomorrow.jpg",
                             MovieStatus = 2,
                             Name = "Edge of Tomorrow",
-                            Price = "9.99",
+                            Price = 9.9900000000000002,
                             StartDate = new DateTime(2014, 5, 28, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "yUmSVcttXnI"
                         },
@@ -664,7 +750,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "The Equalizer 3.jpg",
                             MovieStatus = 1,
                             Name = "The Equalizer 3",
-                            Price = "15.99",
+                            Price = 15.99,
                             StartDate = new DateTime(2023, 9, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "19ikl8vy4zs"
                         },
@@ -678,7 +764,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Across the Spider-Verse.jpg",
                             MovieStatus = 1,
                             Name = "Spider-Man: Across the Spider-Verse",
-                            Price = "14.99",
+                            Price = 14.99,
                             StartDate = new DateTime(2023, 6, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "cqGjhVJWtEg"
                         },
@@ -692,7 +778,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "The Hunger Games The Ballad of Songbirds & Snakes.jpg",
                             MovieStatus = 0,
                             Name = "The Ballad of Songbirds and Snakes",
-                            Price = "15.99",
+                            Price = 15.99,
                             StartDate = new DateTime(2023, 11, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "NxW_X4kzeus"
                         },
@@ -706,7 +792,7 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Dune Part Two.jpg",
                             MovieStatus = 0,
                             Name = "Dune: Part Two",
-                            Price = "16.99",
+                            Price = 16.989999999999998,
                             StartDate = new DateTime(2024, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "poWiludgQCw"
                         },
@@ -720,10 +806,234 @@ namespace E_Tickets.Migrations
                             ImgUrl = "Avatar 3.Png",
                             MovieStatus = 0,
                             Name = "Avatar 3",
-                            Price = "19.99",
+                            Price = 19.989999999999998,
                             StartDate = new DateTime(2024, 12, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             TrailerUrl = "d9MyW72ELq0"
                         });
+                });
+
+            modelBuilder.Entity("E_Tickets.Models.Seat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BookingApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("BookingMovieId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CinemaId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SeatNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CinemaId");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("BookingMovieId", "BookingApplicationUserId");
+
+                    b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("E_Tickets.ViewModel.ApplicationUserVM", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConfirmPassword")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationUserVM");
+                });
+
+            modelBuilder.Entity("E_Tickets.ViewModel.LogInVM", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LogInVM");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("E_Tickets.Models.ActorMovie", b =>
@@ -745,6 +1055,25 @@ namespace E_Tickets.Migrations
                     b.Navigation("Movie");
                 });
 
+            modelBuilder.Entity("E_Tickets.Models.Booking", b =>
+                {
+                    b.HasOne("E_Tickets.Models.ApplicationUser", "applicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Tickets.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("applicationUser");
+                });
+
             modelBuilder.Entity("E_Tickets.Models.Movie", b =>
                 {
                     b.HasOne("E_Tickets.Models.Category", "Category")
@@ -764,9 +1093,84 @@ namespace E_Tickets.Migrations
                     b.Navigation("Cinema");
                 });
 
+            modelBuilder.Entity("E_Tickets.Models.Seat", b =>
+                {
+                    b.HasOne("E_Tickets.Models.Cinema", "Cinema")
+                        .WithMany("Seats")
+                        .HasForeignKey("CinemaId");
+
+                    b.HasOne("E_Tickets.Models.Movie", "Movie")
+                        .WithMany("Seats")
+                        .HasForeignKey("MovieId");
+
+                    b.HasOne("E_Tickets.Models.Booking", null)
+                        .WithMany("AvailableSeats")
+                        .HasForeignKey("BookingMovieId", "BookingApplicationUserId");
+
+                    b.Navigation("Cinema");
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("E_Tickets.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("E_Tickets.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("E_Tickets.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("E_Tickets.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("E_Tickets.Models.Actor", b =>
                 {
                     b.Navigation("ActorMovies");
+                });
+
+            modelBuilder.Entity("E_Tickets.Models.Booking", b =>
+                {
+                    b.Navigation("AvailableSeats");
                 });
 
             modelBuilder.Entity("E_Tickets.Models.Category", b =>
@@ -777,11 +1181,15 @@ namespace E_Tickets.Migrations
             modelBuilder.Entity("E_Tickets.Models.Cinema", b =>
                 {
                     b.Navigation("Movies");
+
+                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("E_Tickets.Models.Movie", b =>
                 {
                     b.Navigation("ActorMovies");
+
+                    b.Navigation("Seats");
                 });
 #pragma warning restore 612, 618
         }
