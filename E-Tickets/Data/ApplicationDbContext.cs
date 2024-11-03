@@ -1,32 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore;
 using E_Tickets.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using E_Tickets.ViewModel;
 namespace E_Tickets.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext: DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-          : base(options)
-        {
-        }
-
-        public ApplicationDbContext()
-        {
-
-        }
-
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ActorMovie> ActorMovies { get; set; }
-        public DbSet<Booking> Booking { get; set; }
-
-
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -36,8 +19,6 @@ namespace E_Tickets.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<ActorMovie>()
             .HasOne(am => am.Actor)
             .WithMany(a => a.ActorMovies)
@@ -212,41 +193,13 @@ new Actor
 
                );
             modelBuilder.Entity<Cinema>().HasData(
-                   new Cinema { Id = 1,
-                       Name = "VOX" ,
-                       Description= "Step into a world where stories come to life at VOX Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo="Vox.jpg" , 
-                       Address= " Mall of Egypt Cinema" },
-                   new Cinema { Id = 2, 
-                       Name = "City Stars ", 
-                       Description= "Step into a world where stories come to life at City Stars Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo= "City Stars.jpg", 
-                       Address= "Nasr City" },
-                   new Cinema { Id = 3,
-                       Name = "Point 90 ", 
-                       Description= "Step into a world where stories come to life at Point 90 Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo= "Point 90.jpg", 
-                       Address= "The 5Th Settlement" },
-                   new Cinema { Id = 4, 
-                       Name = "Americana IMAX ", 
-                       Description= "Step into a world where stories come to life at Americana IMAX Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo= "Americana IMAX.jpg", 
-                       Address= "Sheikh Zayed City" },
-                   new Cinema { Id = 5, 
-                       Name = "Zawya ", 
-                       Description= "Step into a world where stories come to life at Zawya Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo="Zawya.jpg", 
-                       Address= "DownTown" },
-                   new Cinema { Id = 6, 
-                       Name = "Galaxy  ", 
-                       Description= "Step into a world where stories come to life at Galaxy Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo= "Galaxy.jpg",
-                       Address= "ElMaadi " },
-                   new Cinema { Id = 7, 
-                       Name = "Sun City ", 
-                       Description= "Step into a world where stories come to life at Sun City Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", 
-                       CinemaLogo= "SunCity.PNg", 
-                       Address= " Behind Masaken Sheraton" }
+                   new Cinema { Id = 1, Name = "VOX" ,Description= "Step into a world where stories come to life at VOX Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo="Vox.jpg" , Address= " Mall of Egypt Cinema" },
+                   new Cinema { Id = 2, Name = "City Stars ", Description= "Step into a world where stories come to life at City Stars Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo= "City Stars.jpg", Address= "Nasr City" },
+                   new Cinema { Id = 3, Name = "Point 90 ", Description= "Step into a world where stories come to life at Point 90 Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo= "Point 90.jpg", Address= "The 5Th Settlement" },
+                   new Cinema { Id = 4, Name = "Americana IMAX ", Description= "Step into a world where stories come to life at Americana IMAX Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo= "Americana IMAX.jpg", Address= "Sheikh Zayed City" },
+                   new Cinema { Id = 5, Name = "Zawya ", Description= "Step into a world where stories come to life at Zawya Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo="Zawya.jpg", Address= "DownTown" },
+                   new Cinema { Id = 6, Name = "Galaxy  ", Description= "Step into a world where stories come to life at Galaxy Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo= "Galaxy.jpg", Address= "ElMaadi " },
+                   new Cinema { Id = 7, Name = "Sun City ", Description= "Step into a world where stories come to life at Sun City Cinema, a state-of-the-art movie theater designed to provide the ultimate cinematic experience. this modern theater features plush, reclining seats and crystal-clear surround sound that immerses you in every moment. Whether you're here for the latest blockbuster, an indie gem, or a family-friendly flick, our giant screens deliver stunning visuals, transporting you to new worlds. Enjoy a wide selection of snacks, from classic buttered popcorn to gourmet treats, and make the most of our comfortable, spacious seating. With a range of movie times and special screenings, [Theater Name] offers something for every movie lover. Whether it's a solo escape, a night out with friends, or a family outing, your perfect movie experience starts here.", CinemaLogo= "SunCity.PNg", Address= " Behind Masaken Sheraton" }
         
                );
             modelBuilder.Entity<Movie>().HasData(
@@ -255,7 +208,7 @@ new Actor
                     Id = 1,
                     Name = "The Dark Knight",
                     Description = "When the menace known as the Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham. The Dark Knight must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
-                    Price = 12.99,
+                    Price = "12.99",
                     ImgUrl = "The Dark Knight.jpg",
                     TrailerUrl = "EXeTwQWrcwY",
                     StartDate = new DateTime(2008 - 07 - 18) ,
@@ -270,7 +223,7 @@ new Movie
     Id = 10,
     Name = "Once Upon a Time... in Hollywood",
     Description = "A faded television actor and his stunt double strive to achieve fame and success in the film industry during the final years of Hollywood's Golden Age in 1969 Los Angeles.",
-    Price = 12.99,
+    Price = "12.99",
     ImgUrl = "Once Upon a Time... in Hollywood.jpg",
     TrailerUrl = "ELeMaP8EPAA",
     StartDate = new DateTime(2019, 7, 26),
@@ -286,7 +239,7 @@ new Movie
     Id = 3,
     Name = "Venom: The Last Dance",
     Description = "Eddie Brock struggles to adapt to his new life as the host of Venom, while facing off against new threats that challenge his dual existence. As he delves deeper into the world of anti-heroes, he must confront his own inner demons.",
-    Price = 12.99,
+    Price = "12.99",
     ImgUrl = "Venom The Last Dance.jpg",
     TrailerUrl = "HyIyd9joTTc",
     StartDate = new DateTime(2024, 5, 30),
@@ -302,7 +255,7 @@ new Movie
     Id = 4,
     Name = "Killers of the Flower Moon",
     Description = "Based on true events, this film follows the investigation into a series of murders targeting wealthy Osage people in 1920s Oklahoma, sparking the birth of the FBI.",
-    Price = 14.99,
+    Price = "14.99",
     ImgUrl = "Killers of the Flower Moon.jpg",
     TrailerUrl = "EP34Yoxs3FQ",
     StartDate = new DateTime(2023, 10, 20),
@@ -315,7 +268,7 @@ new Movie
     Id = 5,
     Name = "Interstellar",
     Description = "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-    Price = 13.99,
+    Price = "13.99",
     ImgUrl = "Interstellar.jpg",
     TrailerUrl = "zSWdZVtXT7E",
     StartDate = new DateTime(2014 -11-07),
@@ -329,7 +282,7 @@ new Movie
     Id = 6,
     Name = "Joker: Folie à Deux",
     Description = "Sequel to the 2019 film Joker, following Arthur Fleck as he continues to descend into madness, with new characters joining his dark world.",
-    Price = 16.99,
+    Price = "16.99",
     ImgUrl = "Joker Folie à Deux.jpg",
     TrailerUrl = "_OKAwz2MsJs",
     StartDate = new DateTime(2024, 10, 4),
@@ -342,7 +295,7 @@ new Movie
     Id = 7,
     Name = "Deadpool & Wolverine",
     Description = "The merc with a mouth, Deadpool, teams up with Wolverine in a chaotic adventure that crosses timelines and dimensions. Expect a mix of humor, action, and the unexpected in this highly anticipated sequel.",
-    Price = 17.99,
+    Price = "17.99",
     ImgUrl = "Deadpool & Wolverine.jpg",
     TrailerUrl = "73_1biulkYk",
     StartDate = new DateTime(2024, 7, 26),
@@ -355,7 +308,7 @@ new Movie
     Id = 8,
     Name = "The Prestige",
     Description = "In late 19th century London, two rival magicians, Robert Angier and Alfred Borden, compete to create the ultimate stage illusion while sacrificing everything they have to outwit each other. Their obsession leads to tragic consequences as they delve into the world of magic and deception.",
-    Price = 9.99,
+    Price = "9.99",
     ImgUrl = "The Prestige.jpg",
     TrailerUrl = "ELq7V8vkekI",
     StartDate = new DateTime(2006, 10, 20),
@@ -371,7 +324,7 @@ new Movie
     Id = 9,
     Name = "Edge of Tomorrow",
     Description = "In a future where Earth is invaded by aliens, a public relations officer finds himself caught in a time loop, reliving the same day over and over again. With the help of a skilled warrior, he learns how to fight back and save humanity.",
-    Price = 9.99,
+    Price = "9.99",
     ImgUrl = "Edge of Tomorrow.jpg",
     TrailerUrl = "yUmSVcttXnI",
     StartDate = new DateTime(2014, 5, 28),
@@ -387,7 +340,7 @@ new Movie
     Id = 2,
     Name = "The Equalizer 3",
     Description = "Robert McCall finds himself at home in Southern Italy, but he discovers his friends are under the control of local crime bosses. As events turn deadly, McCall knows what he has to do: become his friends' protector by taking on the mafia.",
-    Price = 15.99,
+    Price = "15.99",
     ImgUrl = "The Equalizer 3.jpg",
     TrailerUrl = "19ikl8vy4zs",
     StartDate = new DateTime(2023, 9, 1),
@@ -402,7 +355,7 @@ new Movie
     Id = 11,
     Name = "Spider-Man: Across the Spider-Verse",
     Description = "Miles Morales returns for the next chapter of the Oscar-winning animated saga. He meets Gwen Stacy and teams up with a new group of Spider-People to face a powerful villain while navigating the multiverse.",
-    Price = 14.99,
+    Price = "14.99",
     ImgUrl = "Across the Spider-Verse.jpg",
     TrailerUrl = "cqGjhVJWtEg",
     StartDate = new DateTime(2023, 6, 2),
@@ -418,7 +371,7 @@ new Movie
     Id = 12,
     Name = "The Ballad of Songbirds and Snakes",
     Description = "This prequel to The Hunger Games follows a young Coriolanus Snow as he mentors the District 12 tribute in the 10th Hunger Games, setting the stage for his rise to power.",
-    Price = 15.99,
+    Price = "15.99",
     ImgUrl = "The Hunger Games The Ballad of Songbirds & Snakes.jpg",
     TrailerUrl = "NxW_X4kzeus",
     StartDate = new DateTime(2023, 11, 17),
@@ -431,7 +384,7 @@ new Movie
     Id = 13,
     Name = "Dune: Part Two",
     Description = "Paul Atreides unites with Chani and the Fremen while seeking revenge against those who destroyed his family. He must face a choice between the love of his life and the fate of the universe.",
-    Price = 16.99,
+    Price = "16.99",
     ImgUrl = "Dune Part Two.jpg",
     TrailerUrl = "poWiludgQCw",
     StartDate = new DateTime(2024, 3, 15),
@@ -446,7 +399,7 @@ new Movie
     Id = 14,
     Name = "Avatar 3",
     Description = "The third installment of James Cameron’s epic Avatar franchise continues the journey of the Na'vi people on Pandora, with new adventures and challenges in the breathtaking world of the planet's oceans and beyond.",
-    Price = 19.99,
+    Price = "19.99",
     ImgUrl = "Avatar 3.Png",
     TrailerUrl = "d9MyW72ELq0",
     StartDate = new DateTime(2024, 12, 20),
@@ -480,8 +433,11 @@ new Movie
 
              ); 
 
+            //modelBuilder.HasSequence<int>("IdNumbers");
+
+            //modelBuilder.Entity<Movie>()
+            //    .Property(o => o.Id)
+            //    .HasDefaultValueSql("NEXT VALUE FOR IdNumbers");
         }
-        public DbSet<E_Tickets.ViewModel.ApplicationUserVM> ApplicationUserVM { get; set; } = default!;
-        public DbSet<E_Tickets.ViewModel.LogInVM> LogInVM { get; set; } = default!;
     }
 }

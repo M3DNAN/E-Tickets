@@ -17,14 +17,6 @@
         flex: 1; 
     }
 </style>
-<br />
-@if (User.IsInRole(SD.AdminRole) || User.IsInRole(SD.CompanyRole))
-{
-    <div class="col-3 ms-auto text-end">
-        <a href="/Movie/Index" type="button" class="btn btn-danger"><i class="bi bi-gear"></i> Manage Movies</a>
-    </div>
-}
-
 <div>
     <h5 for="exampleSelect1" class="form-label mt-4">Select Genre</h5>
     <form method="get" action="/Home/Index">
@@ -83,7 +75,7 @@
                             @{
                                 if (movie.MovieStatus == MovieStatus.Available || movie.MovieStatus == MovieStatus.Upcoming)
                                 {
-                                    <a href="/booking/BookATicket?movieId=@movie.Id" class="btn btn-success">Book Now</a>
+                                    <a href="" class="btn btn-success">Book Now</a>
                                 }
 
                             }
