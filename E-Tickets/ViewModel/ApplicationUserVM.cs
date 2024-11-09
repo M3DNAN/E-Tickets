@@ -22,8 +22,6 @@ namespace E_Tickets.ViewModel
 
 
 
-        //public string ReturnUrl { get; set; }
-        //public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
     }
 }

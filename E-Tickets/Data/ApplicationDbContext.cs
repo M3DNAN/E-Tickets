@@ -23,6 +23,7 @@ namespace E_Tickets.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<ActorMovie> ActorMovies { get; set; }
         public DbSet<Booking> Booking { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
 
 
@@ -481,7 +482,6 @@ new Movie
              ); 
 
         }
-        public DbSet<E_Tickets.ViewModel.ApplicationUserVM> ApplicationUserVM { get; set; } = default!;
-        public DbSet<E_Tickets.ViewModel.LogInVM> LogInVM { get; set; } = default!;
+
     }
 }
