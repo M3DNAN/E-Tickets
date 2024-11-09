@@ -42,13 +42,23 @@ namespace E_Tickets.Controllers
             {
                 return RedirectToAction("Login", "Account");
             }
+            var shoppingCarts = Booking.Get([e => e.Movie, e => e.applicationUser], e => e.ApplicationUserId == appUser);
+
             Booking Book = new Booking()
             {
                 NumOfTickets = NumOfTickets,
                 MovieId = MovieId,
                 ApplicationUserId = appUser
             };
-
+            Order Order = new Order()
+            {
+                NumOfTickets = NumOfTickets,
+                MovieId = MovieId,
+                ApplicationUserId = appUser,
+                OrderDate = DateTime.Now,
+                Status = "Completed",
+                TotalPrice = (decimal)shoppingCarts.Sum(e => e.Movie.Price * e.NumOfTickets)
+            };
             var BookDB = Booking.GetOne(expression: e => e.MovieId == MovieId && e.ApplicationUserId == appUser);
 
             if (BookDB == null)
@@ -59,7 +69,8 @@ namespace E_Tickets.Controllers
             Booking.Commit();
 
             TempData["success"] = "Add product to cart successfully";
-
+            Context.Orders.Add(Order);
+            Context.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -153,6 +164,18 @@ namespace E_Tickets.Controllers
             ViewBag.TransactionId = transactionId;
             return View("Success");
         }
+        public async Task<IActionResult> OrderHistory()
+        {
+            var userId = userManager.GetUserId(User);
+            var orders = await Context.Orders
+                .Include(o => o.Movie)
+                .Where(o => o.ApplicationUserId == userId)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            return View(orders);
+        }
+
     }
 }
 

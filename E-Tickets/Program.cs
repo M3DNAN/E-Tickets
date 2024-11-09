@@ -3,6 +3,7 @@ using E_Tickets.Models;
 using E_Tickets.Repository;
 using E_Tickets.Repository.IRepository;
 using E_Tickets.Utility;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -25,20 +26,19 @@ namespace E_Tickets
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
-           builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
-           builder.Services.AddScoped<IActorRepository, ActorRepository>();
-           builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-           builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
+            builder.Services.AddScoped<IActorRepository, ActorRepository>();
+            builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
             builder.Services.AddTransient<IEmailSender, EmailSender>();
-            builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+            builder.Services.AddAuthentication().AddGoogle(options =>
             {
-                googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-                googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-                googleOptions.SaveTokens = true;
-            });
+             options.ClientId = "668939357224-5m19rbfgnv8a6ohkhndn0bbhpbgt36ch.apps.googleusercontent.com";
+             options.ClientSecret = "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";
+               });
 
 
             var app = builder.Build();
@@ -55,7 +55,6 @@ namespace E_Tickets
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

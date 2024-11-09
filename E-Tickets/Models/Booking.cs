@@ -19,6 +19,6 @@ namespace E_Tickets.Models
         [Required]
         [Range(1, 1000)]
         public int NumOfTickets { get; set; }
-        public List<string> SelectedSeats { get; set; } = new List<string>();
+
     }
 }

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Tickets.Controllers
 {
@@ -62,7 +63,7 @@ namespace E_Tickets.Controllers
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user , SD.UserRole);
-                   await signInManager.SignInAsync(user, false);
+                    await signInManager.SignInAsync(user, false);
 
                     await emailSender.SendEmailAsync(user.Email, "confirmation", "bla bla");
 
@@ -90,7 +91,7 @@ namespace E_Tickets.Controllers
                 var User = await userManager.FindByNameAsync(UserVM.UserName);
                 if (User != null)
                 {
-                 var result = await userManager.CheckPasswordAsync(User, UserVM.Password);
+                    var result = await userManager.CheckPasswordAsync(User, UserVM.Password);
 
                     if (result)
                     {
@@ -103,140 +104,109 @@ namespace E_Tickets.Controllers
                         ModelState.AddModelError("Password", "The User Name or Password Is Wrong");
                     }
                 }
-               
+
             }
 
             return View(UserVM);
         }
         [HttpGet]
-        public IActionResult LogInWithGoogle(string returnUrl = "/")
+        [AllowAnonymous]
+        public async Task<IActionResult> LogIn(string? ReturnUrl = null)
         {
-            var redirectUrl = Url.Action("GoogleResponse", "Account", new { ReturnUrl = returnUrl });
-            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
-            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+            LogInVM model = new LogInVM
+            {
+                ReturnUrl = ReturnUrl,
+                ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+            return View(model);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GoogleResponse(string returnUrl = "/")
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
         {
+            var redirectUrl = Url.Action(action: "ExternalLoginCallback", controller: "Account", values: new { ReturnUrl = returnUrl });
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string? returnUrl, string? remoteError)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LogInVM loginViewModel = new LogInVM
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+
+                return View("Login", loginViewModel);
+            }
+
+            // Get the login information about the user from the external login provider
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                Console.WriteLine("No external login info available.");
                 ModelState.AddModelError(string.Empty, "Error loading external login information.");
-                return RedirectToAction("Login");
+
+                return View("Login", loginViewModel);
             }
 
-            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+            // If the user already has a login (i.e., if there is a record in AspNetUserLogins table)
+            // then sign-in the user with this external login provider
+            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
             if (signInResult.Succeeded)
             {
-                Console.WriteLine("User signed in successfully.");
                 return LocalRedirect(returnUrl);
             }
 
-            // Check if user needs to be created
-            var userEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
-            if (string.IsNullOrEmpty(userEmail))
+            // If there is no record in AspNetUserLogins table, the user may not have a local account
+            else
             {
-                Console.WriteLine("No email claim found.");
-                ModelState.AddModelError(string.Empty, "Email claim not found.");
-                return RedirectToAction("Login");
-            }
+                // Get the email claim value
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
 
-            var user = await userManager.FindByEmailAsync(userEmail);
-            if (user == null)
-            {
-                user = new ApplicationUser { UserName = userEmail, Email = userEmail, EmailConfirmed = true };
-                var createResult = await userManager.CreateAsync(user);
-                if (createResult.Succeeded)
+                if (email != null)
                 {
+                    // Create a new user without password if we do not have a user already
+                    var user = await userManager.FindByEmailAsync(email);
+
+                    if (user == null)
+                    {
+                        user = new ApplicationUser
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                  
+                        };
+
+                        //This will create a new user into the AspNetUsers table without password
+                        await userManager.CreateAsync(user);
+                    }
+
+                    // Add a login (i.e., insert a row for the user in AspNetUserLogins table)
                     await userManager.AddLoginAsync(user, info);
+
+                    //Then Signin the User
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    Console.WriteLine("User created and signed in.");
+
                     return LocalRedirect(returnUrl);
                 }
+
+                // If we cannot find the user email we cannot continue
+                ViewBag.ErrorTitle = $"Email claim not received from: {info.LoginProvider}";
+                ViewBag.ErrorMessage = "Please contact support on info@dotnettutorials.net";
+
+                return View("Error");
             }
-
-            Console.WriteLine("An error occurred during the external login process.");
-            ModelState.AddModelError(string.Empty, "An error occurred during the external login process.");
-            return RedirectToAction("Login");
         }
-
-        //public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/", string remoteError = null)
-        //{
-        //    if (!string.IsNullOrEmpty(remoteError))
-        //    {
-        //        ModelState.AddModelError(string.Empty, $"Error from external login provider: {remoteError}");
-        //        return View("Login"); // Adjust to your actual login view
-        //    }
-
-        //    // Get login information from the external provider
-        //    var info = await signInManager.GetExternalLoginInfoAsync();
-        //    if (info == null)
-        //    {
-        //        ModelState.AddModelError(string.Empty, "Error loading external login information.");
-        //        return View("Login");
-        //    }
-
-        //    // Sign in with the external login provider if the user already has an account
-        //    var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-
-        //    if (signInResult.Succeeded)
-        //    {
-        //        return LocalRedirect(returnUrl);
-        //    }
-        //    else
-        //    {
-        //        // If the user does not have an account, create one based on their external login info
-        //        var userEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
-        //        if (!string.IsNullOrEmpty(userEmail))
-        //        {
-        //            var user = await userManager.FindByEmailAsync(userEmail);
-
-        //            if (user == null)
-        //            {
-        //                user = new ApplicationUser
-        //                {
-        //                    UserName = userEmail,
-        //                    Email = userEmail,
-        //                    EmailConfirmed = true
-        //                };
-
-        //                var createResult = await userManager.CreateAsync(user);
-        //                if (createResult.Succeeded)
-        //                {
-        //                    await userManager.AddLoginAsync(user, info);
-        //                    await signInManager.SignInAsync(user, isPersistent: false);
-
-        //                    return LocalRedirect(returnUrl);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                await userManager.AddLoginAsync(user, info);
-        //                await signInManager.SignInAsync(user, isPersistent: false);
-
-        //                return LocalRedirect(returnUrl);
-        //            }
-        //        }
-        //    }
-
-        //    ModelState.AddModelError(string.Empty, "Something went wrong during the external login process.");
-        //    return View("Login");
-        //}
-        //[HttpGet]
-        //public IActionResult GoogleResponse(string returnUrl = "/")
-        //{
-
-        //    if (User.Identity?.IsAuthenticated == true)
-        //    {
-        //        return LocalRedirect(returnUrl);
-        //    }
-
-
-        //    return RedirectToAction("Login", "Account");
-        //}
-
 
 
 

@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Booking>
+
+<h2>Your Orders</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Movie</th>
+            <th>Tickets</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Movie.Name</td>
+                <td>@order.NumOfTickets</td>
+                <td>@ViewBag.TotalPrice</td>
+            </tr>
+        }
+    </tbody>
+</table>

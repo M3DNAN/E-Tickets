@@ -14,7 +14,8 @@ namespace E_Tickets.ViewModel
         public string Password { get; set; }
         [Required]
         public bool RememberMe { get; set; }
-      //  public IEnumerable<AuthenticationScheme> Schemes { get; set; }
-
+        public string? ReturnUrl { get; set; }
+        // AuthenticationScheme is in Microsoft.AspNetCore.Authentication namespace
+        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
     }
 }
