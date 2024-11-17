@@ -2,23 +2,12 @@
 
 namespace E_Tickets.Repository.IRepository
 {
-    public interface IActorRepository
+    public interface IActorRepository:IRepository<Actor>
     {
-        List<Actor> GetAll(string? expression = null);
+        public List<Movie> GetMovies();
+        public void AddMovieActor(ActorMovie actorMovie);
+        public void RemoveMovieActor(ActorMovie actorMovie);
+        public Actor Select(int actorId);
 
-        Actor GetById(int ActorId);
-
-        void CreateNew(Actor Actor);
-        List<Movie> GetMovies();
-        void Edit(Actor Actor);
-
-        void Delete(Actor Actor);
-
-        void AddMovieActor(ActorMovie actorMovie);
-        void RemoveMovieActor(ActorMovie actorMovie);
-
-        Actor Select(int actorId);
-
-        void Commit();
     }
 }

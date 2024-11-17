@@ -12,7 +12,6 @@ namespace E_Tickets.Controllers
     public class CinemaController : Controller
     {
        //ApplicationDbContext context  = new ApplicationDbContext();
-       //CinemaRepository CinemaRepository = new CinemaRepository();
 
         ICinemaRepository CinemaRepository;
         public CinemaController(ICinemaRepository CinemaRepository)
@@ -21,7 +20,7 @@ namespace E_Tickets.Controllers
         }
         public IActionResult Index()
         {
-            var Cinema = CinemaRepository.GetAll("Movies");
+            var Cinema = CinemaRepository.Get([e=>e.Movies]);
 
             return View(Cinema);
         }
@@ -29,7 +28,7 @@ namespace E_Tickets.Controllers
         [HttpGet]
         public IActionResult AddCinema()
         {
-            ViewBag.Movies = CinemaRepository.GetMovies();
+            ViewBag.Movies = CinemaRepository.Get([e => e.Movies]).ToList();
             return View();
         }
 
@@ -53,7 +52,7 @@ namespace E_Tickets.Controllers
 
                 Cinema.CinemaLogo = fileName;
             }
-            CinemaRepository.CreateNew(Cinema);
+            CinemaRepository.Create(Cinema);
             CinemaRepository.Commit();
             TempData["Add"] = "Actor successfully added!";
 
@@ -64,7 +63,7 @@ namespace E_Tickets.Controllers
         [HttpGet]
         public IActionResult Edit(int Id)
         {
-            var Cinema = CinemaRepository.GetById(Id);
+            var Cinema = CinemaRepository.GetOne(expression:e=>e.Id== Id);
   
                 return View(Cinema);
         }
@@ -118,7 +117,7 @@ namespace E_Tickets.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (CinemaRepository.GetById(cinema.Id) == null)
+                    if (CinemaRepository.GetOne(expression:e=>e.Id == cinema.Id) == null)
                     {
                         return NotFound();
                     }

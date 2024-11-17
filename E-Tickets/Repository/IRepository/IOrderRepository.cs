@@ -2,7 +2,7 @@
 
 namespace E_Tickets.Repository.IRepository
 {
-    public interface ICinemaRepository : IRepository<Cinema>
+    public interface IOrderRepository : IRepository<Order>
     {
 
     }

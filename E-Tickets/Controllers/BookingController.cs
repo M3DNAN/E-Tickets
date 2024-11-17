@@ -13,14 +13,16 @@ namespace E_Tickets.Controllers
 {
     public class BookingController : Controller
     {
-        ApplicationDbContext Context = new ApplicationDbContext();
+       // ApplicationDbContext Context = new ApplicationDbContext();
 
         private readonly IBookingRepository Booking;
+        private readonly IOrderRepository orderRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public BookingController(IBookingRepository Booking, UserManager<ApplicationUser> userManager)
+        public BookingController(IBookingRepository Booking,IOrderRepository orderRepository, UserManager<ApplicationUser> userManager)
         {
             this.Booking = Booking;
+            this.orderRepository = orderRepository;
             this.userManager = userManager;
         }
         public IActionResult Index()
@@ -50,15 +52,7 @@ namespace E_Tickets.Controllers
                 MovieId = MovieId,
                 ApplicationUserId = appUser
             };
-            Order Order = new Order()
-            {
-                NumOfTickets = NumOfTickets,
-                MovieId = MovieId,
-                ApplicationUserId = appUser,
-                OrderDate = DateTime.Now,
-                Status = "Completed",
-                TotalPrice = (decimal)shoppingCarts.Sum(e => e.Movie.Price * e.NumOfTickets)
-            };
+  
             var BookDB = Booking.GetOne(expression: e => e.MovieId == MovieId && e.ApplicationUserId == appUser);
 
             if (BookDB == null)
@@ -69,10 +63,10 @@ namespace E_Tickets.Controllers
             Booking.Commit();
 
             TempData["success"] = "Add product to cart successfully";
-            Context.Orders.Add(Order);
-            Context.SaveChanges();
+
             return RedirectToAction("Index");
         }
+     
 
 
         public IActionResult Increment(int MovieId)
@@ -160,19 +154,61 @@ namespace E_Tickets.Controllers
         }
         public IActionResult Success(decimal amount, string transactionId)
         {
-            ViewBag.PaymentAmount = amount;
-            ViewBag.TransactionId = transactionId;
+            var appUser = userManager.GetUserId(User);
+
+         
+            var shoppingCarts = Booking.Get(
+                [e => e.Movie, e => e.applicationUser] ,
+                expression: e => e.ApplicationUserId == appUser
+            ).ToList();
+
+            if (!shoppingCarts.Any())
+            {
+                TempData["error"] = "No items in cart to complete purchase.";
+                return RedirectToAction("Index");
+            }
+
+          
+            foreach (var Item in shoppingCarts)
+            {
+                Order order = new Order
+                {
+                    MovieId = Item.MovieId,
+                    ApplicationUserId = appUser,
+                    OrderDate = DateTime.Now,
+                    Status = "Completed",
+                    NumOfTickets = Item.NumOfTickets,
+                    TotalPrice = (decimal)Item.Movie.Price * Item.NumOfTickets
+                };
+
+                orderRepository.Create(order);
+                ViewBag.PaymentAmount = (decimal)Item.Movie.Price * Item.NumOfTickets;
+
+            }
+
+
+            orderRepository.Commit();
+
+          
+            foreach (var cartItem in shoppingCarts)
+            {
+                Booking.Delete(cartItem);
+            }
+            Booking.Commit();
+
+
+            TempData["success"] = "Order completed successfully!";
             return View("Success");
         }
-        public async Task<IActionResult> OrderHistory()
+        public  IActionResult OrderHistory()
         {
             var userId = userManager.GetUserId(User);
-            var orders = await Context.Orders
-                .Include(o => o.Movie)
-                .Where(o => o.ApplicationUserId == userId)
-                .OrderByDescending(o => o.OrderDate)
-                .ToListAsync();
-
+            //var orders = await Context.Orders
+            //    .Include(o => o.Movie)
+            //    .Where(o => o.ApplicationUserId == userId)
+            //    .OrderByDescending(o => o.OrderDate)
+            //    .ToListAsync();
+            var orders =  orderRepository.Get([o => o.Movie], expression: o => o.ApplicationUserId == userId).OrderByDescending(o => o.OrderDate).ToList();
             return View(orders);
         }
 

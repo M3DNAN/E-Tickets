@@ -8,7 +8,7 @@ namespace E_Tickets.Controllers
 {
     public class HomeController : Controller
     {
-        ApplicationDbContext Context = new ApplicationDbContext() ;
+       ApplicationDbContext Context = new ApplicationDbContext() ;
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)

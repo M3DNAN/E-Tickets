@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Tickets.Repository
 {
-    public class CinemaRepository: Repository<Cinema> ,ICinemaRepository
+    public class OrderRepository : Repository<Order>, IOrderRepository
     {
         private readonly ApplicationDbContext dbContext;
 
-        public CinemaRepository(ApplicationDbContext dbContext) : base(dbContext)
+        public OrderRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             this.dbContext = dbContext;
         }

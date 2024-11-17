@@ -8,7 +8,7 @@ namespace E_Tickets.Controllers
 {
     public class MovieController : Controller
     {
-        ApplicationDbContext Context = new ApplicationDbContext();
+     //   ApplicationDbContext Context = new ApplicationDbContext();
         IMovieRepository MovieRepo;
         public MovieController(IMovieRepository MovieRepo)
         {
@@ -17,7 +17,7 @@ namespace E_Tickets.Controllers
 
         public IActionResult Index()
         {
-            var movie = MovieRepo.GetAll();
+            var movie = MovieRepo.Get();
             return View(movie);
         }
 
@@ -26,7 +26,7 @@ namespace E_Tickets.Controllers
             
             ViewBag.Actor = MovieRepo.GetActors();
             ViewBag.Genre = MovieRepo.GetGenres();
-            ViewBag.Cinema= MovieRepo.GetCinemas();
+            ViewBag.Cinema = MovieRepo.GetCinemas();
             return View();
         }
         [HttpPost]
@@ -50,7 +50,7 @@ namespace E_Tickets.Controllers
             }
 
 
-            MovieRepo.CreateNew(movie);
+            MovieRepo.Create(movie);
             MovieRepo.Commit();
        
 			foreach (var actorId in SelectedMovies)
@@ -84,7 +84,7 @@ namespace E_Tickets.Controllers
 
 			var selectedMovieIds = movie.ActorMovies.Select(am => am.MovieId).ToList();
 
-			ViewBag.Movies = MovieRepo.GetAll()
+			ViewBag.Movies = MovieRepo.Get()
 				.Select(m => new SelectListItem
 				{
 					Value = m.Id.ToString(),

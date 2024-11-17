@@ -25,12 +25,13 @@ namespace E_Tickets
 
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders(); 
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
             builder.Services.AddScoped<IActorRepository, ActorRepository>();
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
             builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -39,7 +40,7 @@ namespace E_Tickets
              options.ClientId = "668939357224-5m19rbfgnv8a6ohkhndn0bbhpbgt36ch.apps.googleusercontent.com";
              options.ClientSecret = "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";
                });
-
+   
 
             var app = builder.Build();
 

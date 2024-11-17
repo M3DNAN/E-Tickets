@@ -5,23 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace E_Tickets.Repository
 {
-    public class MovieRepository: IMovieRepository
+    public class MovieRepository: Repository<Movie> ,IMovieRepository
     {
         private readonly ApplicationDbContext dbContext;
 
-        public MovieRepository(ApplicationDbContext dbContext)
+        public MovieRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        public List<Movie> GetAll(string? expression = null)
-        {
-            return expression == null ? dbContext.Movies.ToList() : dbContext.Movies.Include(expression).ToList();
-        }
+
         public List<Category> GetGenres()
         {
             return dbContext.Categories.ToList();
-        } 
+        }
         public List<Cinema> GetCinemas()
         {
             return dbContext.Cinemas.ToList();
@@ -29,30 +26,6 @@ namespace E_Tickets.Repository
         public List<Actor> GetActors()
         {
             return dbContext.Actors.ToList();
-        }
-        public Movie GetById(int MovieId)
-        {
-            return dbContext.Movies.FirstOrDefault(c => c.Id == MovieId);
-        }
-
-        public void CreateNew(Movie Movie)
-        {
-            dbContext.Movies.Add(Movie);
-        }
-
-        public void Edit(Movie Movie)
-        {
-            dbContext.Movies.Update(Movie);
-        }
-
-        public void Delete(Movie Movie)
-        {
-            dbContext.Movies.Remove(Movie);
-        }
-
-        public void Commit()
-        {
-            dbContext.SaveChanges();
         }
 
 

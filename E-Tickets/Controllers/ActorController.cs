@@ -17,11 +17,9 @@ namespace E_Tickets.Controllers
         {
             this.ActorRepo = ActorRepo;
         }
-
-
         public IActionResult Actors()
         {
-            var Actors = ActorRepo.GetAll();
+            var Actors = ActorRepo.Get();
             return View(Actors);
         }
         public IActionResult AddActor()
@@ -50,18 +48,18 @@ namespace E_Tickets.Controllers
             }
 
 
-            ActorRepo.CreateNew(actor);
+            ActorRepo.Create(actor);
             ActorRepo.Commit();
 
 
 
-            foreach (var actorId in SelectedMovies)
+            foreach (var movieId in SelectedMovies)
             {
                 var actorMovie = new ActorMovie
                 {
-                    MovieId = actor.Id,
-					ActorId = actorId
-				};
+                    ActorId = actor.Id,  
+                    MovieId = movieId
+                };
                 ActorRepo.AddMovieActor(actorMovie);
             }
 
@@ -71,7 +69,6 @@ namespace E_Tickets.Controllers
             TempData["Add"] = "Actor successfully added!";
             return RedirectToAction("Actors");
         }
-
         [HttpGet]
         public IActionResult EditActor(int id)
         {
@@ -94,14 +91,11 @@ namespace E_Tickets.Controllers
 
             return View(actor);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult EditActor(Actor actor, IFormFile ProfilePictrue, List<int> SelectedMovies)
         {
-            //var existingActor = Context.Actors
-            //    .Include(a => a.ActorMovies)
-            //    .FirstOrDefault(a => a.Id == actor.Id);
+   
 
             var existingActor = ActorRepo.Select(actor.Id);
 
@@ -167,9 +161,6 @@ namespace E_Tickets.Controllers
             TempData["Edit"] = "Actor successfully updated!";
             return RedirectToAction("Actors");
         }
-
-    
-
     public IActionResult DeleteActor(Actor actor)
         {
             ActorRepo.Delete(actor);

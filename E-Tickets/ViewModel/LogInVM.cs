@@ -8,6 +8,7 @@ namespace E_Tickets.ViewModel
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "User Name")]
         public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]
